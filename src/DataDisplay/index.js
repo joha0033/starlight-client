@@ -1,31 +1,76 @@
 import React from 'react'
 import { GetData } from './Helpers'
 import moment from 'moment'
+import styled from 'styled-components';
+
+
+const DisplayCard = styled.div`
+  text-align: left;
+  width: 800px;
+  min-height: 50px;
+  margin: 30px auto;
+`;
+
+const DisplayTitle = styled.div`
+  text-decoration: underline;
+`;
+
+const DisplayContent = styled.div`
+  padding-left: 2em;
+`;
+
+
 
 class DataDisplay extends React.Component {
+
   constructor(props){
+
     super(props)
+
     this.state = {
       data: []
     }
+
     this.fetchData = this.fetchData.bind(this)
+    this.dataMap = this.dataMap.bind(this)
+    this.sortData = this.sortData.bind(this)
+
   }
+
 
   componentWillMount() {
+
     this.fetchData()
+
   }
 
+
   fetchData() {
+
     GetData().then((results) => {
 
       this.setState({data: results}, () => {
-        // add data to page!
-        console.log(this.state.data);
+
+        // SNAG LOCATION AND CONVERT WITH GOOGLE API
+        console.log('data set? ', !!this.state.data);
+
       })
 
     })
   }
 
+
+  sortData() {
+    console.log('sort hit!');
+    let sortedArray = this.state.data
+    sortedArray.sort((a, b) => {
+      return b.size - a.size
+    })
+    this.setState({data: sortedArray}, ()=>{
+      console.log('sorted');
+    })
+    return this.dataMap()
+  }
 
   // DISPLAYS ALL CAN
   dataMap() {
@@ -36,21 +81,38 @@ class DataDisplay extends React.Component {
 
   // SANITY CHECK FOR STATE !! CREATES BOOLEAN OF VARIABLE
   console.log(!!newCanDataObject);
-  // let createdDate = '2017-11-07T18:47:53.162Z'
-  // let formattedDate = moment(createdDate).format("MMM Do YY hh:mm a")
-  // console.log(formattedDate);
+
   return newCanDataObject.map((can, index)=>{
 
-    console.log(can.location);
-    console.log(can.prevLocation);
 
-    return(<div key={index}>
-            <h3>Name: {can.name}</h3>
-            <p>Serial#: {can.serial}</p>
-            <p>Size: {can.size}</p>
-            <p>Created On: {moment(can.createdDate).format("MMM Do YY hh:mm a")}</p>
-            <p>Modified On: {moment(can.modifiedDate).format("MMM Do YY hh:mm a")}</p>
-          </div>)
+    return(
+
+        <div key={index}>
+          <DisplayCard>
+
+            <DisplayTitle >
+
+              <h3>Name: {can.name}</h3>
+
+            </DisplayTitle>
+
+            <DisplayContent>
+
+              <p>Serial#: {can.serial}</p>
+              <p>Size: {can.size}</p>
+              <p>Created On: {moment(can.createdDate).format("MMM Do YY hh:mm a")}</p>
+              <p>Modified On: {moment(can.modifiedDate).format("MMM Do YY hh:mm a")}</p>
+
+            </DisplayContent>
+
+            <hr />
+
+          </DisplayCard>
+
+
+        </div>
+
+      )
   })
 
 }
@@ -63,7 +125,11 @@ class DataDisplay extends React.Component {
     return (
 
       <div>
+        {/*  CREATE SIDE BAR WITH MULTIPLE FILTERS*/}
+        <button onClick={()=>this.sortData()}>sort</button>
+        <button onClick={()=>this.fetchData()}>unsort</button>
 
+        {/*  CREATE MAP VIEW BASED ON LOCATIONS */}
         <h1>Can data</h1>
         {this.dataMap()}
 
