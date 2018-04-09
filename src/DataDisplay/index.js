@@ -125,12 +125,15 @@ class DataDisplay extends React.Component {
     return (
 
       <div>
-        {/*  CREATE SIDE BAR WITH MULTIPLE FILTERS*/}
+
+        {/*  CREATE SIDE BAR WITH MULTIPLE FILTERS + LOCATION/DISATNCE*/}
         <button onClick={()=>this.sortData()}>sort</button>
         <button onClick={()=>this.fetchData()}>unsort</button>
 
-        {/*  CREATE MAP VIEW BASED ON LOCATIONS */}
+        {/*  CREATE MAP VIEW/ROUTE BASED ON LOCATIONS */}
+
         <h1>Can data</h1>
+        {/*  ADD PAGINATION 10 PER PAGE*/}
         {this.dataMap()}
 
       </div>
