@@ -5,15 +5,18 @@ import moment from 'moment'
 
 import styled from 'styled-components';
 
-import { Row , Col , DropdownButton , MenuItem } from 'react-bootstrap';
+import { Row , Col , DropdownButton , MenuItem , Glyphicon, Button } from 'react-bootstrap';
 
 
 const DisplayCard = styled.div`
-
   text-align: left;
   width: 800px;
   min-height: 50px;
   margin: 30px auto;
+`;
+
+const Sidebar = styled.div`
+  padding-top: 2em;
 `;
 
 const DisplayTitle = styled.div`
@@ -33,12 +36,15 @@ class DataDisplay extends Component {
     super(props)
 
     this.state = {
-      data: []
+      data: [],
+      descending: true,
+      sortType: String
     }
 
     this.fetchData = this.fetchData.bind(this)
     this.dataMap = this.dataMap.bind(this)
     this.sortData = this.sortData.bind(this)
+    this.sortOrder = this.sortOrder.bind(this)
 
   }
 
@@ -64,41 +70,66 @@ class DataDisplay extends Component {
     })
   }
 
+
+// TOGGLE SORT ORDER
+sortOrder() {
+  this.setState({descending: !this.state.descending}, () =>{
+    return this.sortData(this.state.sortType)
+  })
+}
+
+
   // SORT THE DATA BY TYPE
   sortData(type) {
 
-    console.log(type);
+    // CREATE NEW ARRAY FROM STATE
     let sortedArray = this.state.data
 
-    type.includes('Date')
-    ? sortedArray.sort((a, b) => {
+    // SAVE SORT TYPE FROM CLICK TO STATE
+    this.setState({sortType: type})
 
-      return new Date(b[type]) - new Date(a[type]);
+    // IF DESENDING ORDER IS TRUE
+    this.state.descending
+
+    // DESCENDING TRUE - SORT DESCENDING
+    ?  sortedArray.sort((a, b) => {
+
+      !type.includes('Date')
+      ?  ( a = ~~a[type], b = ~~b[type]) // BITWISE~~ CONVERTS TO INT
+      : ( a = new Date(a[type]), b = new Date(b[type]))
+      console.log(a, b);
+      return (a > b ? 1 : a < b ? -1 : 0)
 
     })
+
+    // DESCENDING FALSE - SORT ASCENDING
     : sortedArray.sort((a, b) => {
 
 
-      return b[type] - a[type]
+      !type.includes('Date')
+      ? (a = ~~a[type], b = ~~b[type]) // BITWISE~~ CONVERTS TO INT
+      : (a = new Date(a[type]), b = new Date(b[type]))
+      console.log(a, b);
+      return (a < b ? 1 : a > b ? -1 : 0)
 
+    }) // : sortedArray = sortedArray.reverse() <--CHEAPER???
+
+    return this.setState({data: sortedArray}, ()=>{
+      return this.dataMap()
     })
 
 
-    this.setState({data: sortedArray}, ()=>{
-      console.log('sorted');
-    })
-    return this.dataMap()
   }
 
   // DISPLAYS ALL CAN
   dataMap() {
-  console.log('dataMap');
+  // console.log('dataMap');
 
   // KEEP IMMUTABILITY BY CREATING NEW STATE OBJECT
   let newCanDataObject = this.state.data
 
   // SANITY CHECK FOR STATE !! CREATES BOOLEAN OF VARIABLE
-  console.log(!!newCanDataObject);
+  // console.log(!!newCanDataObject);
 
   return newCanDataObject.map((can, index)=>{
 
@@ -153,21 +184,36 @@ class DataDisplay extends Component {
         <h1>Can data</h1>
         <Row>
 
-          <Col xs={3}>
-            <DropdownButton
-              title="Sort By:"
-              id="dropdown-size-large"
-            >
-              <MenuItem eventKey="1" onClick={ () => this.sortData('size') } >Size</MenuItem>
-              <MenuItem eventKey="2" onClick={ () => this.sortData('createdDate') }>Date Created</MenuItem>
-              <MenuItem eventKey="3" onClick={ () => this.sortData('modifiedDate') }>Date Modified</MenuItem>
+            <Col xs={3}>
+                <Sidebar>
+              <Row className='container-fluid'>
+                <Col xs={6}>
+                  <DropdownButton
 
-            </DropdownButton>
+                    title="Sort By:"
+                    id="dropdown-size-large"
+                  >
+                    <MenuItem eventKey="1" onClick={ () => this.sortData('size') } >Size</MenuItem>
+                    <MenuItem eventKey="2" onClick={ () => this.sortData('createdDate') }>Date Created</MenuItem>
+                    <MenuItem eventKey="3" onClick={ () => this.sortData('modifiedDate') }>Date Modified</MenuItem>
+
+                  </DropdownButton>
+                </Col>
+                <Col xs={2}>
+                  <Button onClick={this.sortOrder}>
+                    <Glyphicon glyph="sort" />
+                  </Button>
+                </Col>
 
 
-          </Col>
+              </Row>
 
-          <Col xs={9} >
+            </Sidebar>
+            </Col>
+        
+
+
+          <Col xs={9}>
 
 
              {/* ADD PAGINATION 10 PER PAGE */}
