@@ -1,10 +1,15 @@
-import React from 'react'
+import React, { Component } from 'react'
 import { GetData } from './Helpers'
 import moment from 'moment'
+
+
 import styled from 'styled-components';
+
+import { Row , Col , DropdownButton , MenuItem } from 'react-bootstrap';
 
 
 const DisplayCard = styled.div`
+
   text-align: left;
   width: 800px;
   min-height: 50px;
@@ -21,7 +26,7 @@ const DisplayContent = styled.div`
 
 
 
-class DataDisplay extends React.Component {
+class DataDisplay extends Component {
 
   constructor(props){
 
@@ -37,14 +42,14 @@ class DataDisplay extends React.Component {
 
   }
 
-
+  // CALL FETCH WHEN COMPONENT MOUNTS
   componentWillMount() {
 
     this.fetchData()
 
   }
 
-
+  // FETCH CAN JSON DATA AND SET STATE
   fetchData() {
 
     GetData().then((results) => {
@@ -59,13 +64,26 @@ class DataDisplay extends React.Component {
     })
   }
 
+  // SORT THE DATA BY TYPE
+  sortData(type) {
 
-  sortData() {
-    console.log('sort hit!');
+    console.log(type);
     let sortedArray = this.state.data
-    sortedArray.sort((a, b) => {
-      return b.size - a.size
+
+    type.includes('Date')
+    ? sortedArray.sort((a, b) => {
+
+      return new Date(b[type]) - new Date(a[type]);
+
     })
+    : sortedArray.sort((a, b) => {
+
+
+      return b[type] - a[type]
+
+    })
+
+
     this.setState({data: sortedArray}, ()=>{
       console.log('sorted');
     })
@@ -88,9 +106,11 @@ class DataDisplay extends React.Component {
     return(
 
         <div key={index}>
+
+
           <DisplayCard>
 
-            <DisplayTitle >
+             <DisplayTitle >
 
               <h3>Name: {can.name}</h3>
 
@@ -124,18 +144,38 @@ class DataDisplay extends React.Component {
 
     return (
 
-      <div>
-
-        {/*  CREATE SIDE BAR WITH MULTIPLE FILTERS + LOCATION/DISATNCE*/}
-        <button onClick={()=>this.sortData()}>sort</button>
-        <button onClick={()=>this.fetchData()}>unsort</button>
+      <div className="container">
+         {/* CREATE SIDE BAR WITH MULTIPLE FILTERS + LOCATION/DISATNCE */}
 
         {/*  CREATE MAP VIEW/ROUTE BASED ON LOCATIONS */}
 
-        <h1>Can data</h1>
-        {/*  ADD PAGINATION 10 PER PAGE*/}
-        {this.dataMap()}
 
+        <h1>Can data</h1>
+        <Row>
+
+          <Col xs={3}>
+            <DropdownButton
+              title="Sort By:"
+              id="dropdown-size-large"
+            >
+              <MenuItem eventKey="1" onClick={ () => this.sortData('size') } >Size</MenuItem>
+              <MenuItem eventKey="2" onClick={ () => this.sortData('createdDate') }>Date Created</MenuItem>
+              <MenuItem eventKey="3" onClick={ () => this.sortData('modifiedDate') }>Date Modified</MenuItem>
+
+            </DropdownButton>
+
+
+          </Col>
+
+          <Col xs={9} >
+
+
+             {/* ADD PAGINATION 10 PER PAGE */}
+            {this.dataMap()}
+
+          </Col>
+
+        </Row>
       </div>
 
     )
