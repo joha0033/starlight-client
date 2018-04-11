@@ -1,12 +1,15 @@
 import React, { Component } from 'react'
 import styled from 'styled-components';
 import moment from 'moment'
+
+
 // HELPERS
 import { GetDataHelper, SortHelper, PageHelper, SplitDataHelper } from './Helpers'
 
 // COMPONENTS
 import Sidebar from './Sidebar'
-// import DataMap from './DataMap'
+import SimpleMap from './Map'
+
 
 // STYLES
 import { Row , Col } from 'react-bootstrap';
@@ -32,7 +35,6 @@ const PaginationPadding = styled.div `
 `;
 
 
-
 class DataDisplay extends Component {
 
   constructor(props){
@@ -40,7 +42,10 @@ class DataDisplay extends Component {
     super(props)
 
     this.state = {
-
+      center: {
+        lat: 59.95,
+        lng: 30.33
+      },
       masterData: [],
       sortedData:[],
       descending: false,
@@ -71,7 +76,7 @@ class DataDisplay extends Component {
       return this.setState({masterData: results}, () => {
 
         // sanity check for data set
-        return console.log('data set?', !!this.state.masterData[0] !== undefined, 'length:',this.state.masterData.length)
+        // return console.log('data set?', !!this.state.masterData[0] !== undefined, 'length:',this.state.masterData.length)
 
       })
 
@@ -123,6 +128,8 @@ class DataDisplay extends Component {
         });
   }
 
+
+
   //////////////////////////////////////////////////
   // MAPS DATA TO CREATE PAGINATION WITH SORTED DATA
   dataMap() {
@@ -142,16 +149,44 @@ class DataDisplay extends Component {
 
              <DisplayTitle >
 
-              <h3>Name: {can.name}</h3>
+
 
             </DisplayTitle>
 
             <DisplayContent>
+              <Row>
+                <Col xs={6}>
+                  <h3>Name: {can.name}</h3>
+                  <p>Serial#: {can.serial}</p>
+                  <p>Size: {can.size}</p>
+                  <p>Created On: {moment(can.createdDate).format("MMM Do YY hh:mm a")}</p>
+                  <p>Modified On: {moment(can.modifiedDate).format("MMM Do YY hh:mm a")}</p>
 
-              <p>Serial#: {can.serial}</p>
-              <p>Size: {can.size}</p>
-              <p>Created On: {moment(can.createdDate).format("MMM Do YY hh:mm a")}</p>
-              <p>Modified On: {moment(can.modifiedDate).format("MMM Do YY hh:mm a")}</p>
+                </Col>
+                <Col xs={6}>
+                  <h3>Location</h3>
+                  <div style={{width: '200px', height: '150px'}}>
+                    <SimpleMap
+                    lat = {can.location.location.lat}
+                    lng = {can.location.location.lon}
+                    center = {can.location.location}
+                  />
+                  </div>
+                </Col>
+
+                {console.log(!!can.location.location)}
+
+
+              </Row>
+
+
+
+
+
+
+
+
+
 
             </DisplayContent>
 
