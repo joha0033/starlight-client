@@ -2,10 +2,14 @@
   text-align: center;
 }
 
-.App-logo {
+.homeBody{
+  height:650px%;
+}
+
+/*.App-logo {
   animation: App-logo-spin infinite 20s linear;
   height: 80px;
-}
+}*/
 
 .App-header {
   background-color: #222;
@@ -20,6 +24,7 @@
 
 .App-intro {
   font-size: large;
+  padding-top: 3em;
 }
 
 /*@keyframes App-logo-spin {
