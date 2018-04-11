@@ -7,7 +7,7 @@ import GoogleMapReact from 'google-map-react'
 class SimpleMap extends React.Component {
 
   renderMarkers(map, maps) {
-  
+
     return new maps.Marker({
       position:{
         lat: this.props.lat,
@@ -25,6 +25,7 @@ class SimpleMap extends React.Component {
        <GoogleMapReact
         google={this.props.google}
         bootstrapURLKeys={{ key: 'AIzaSyChyTQR99XFwMy--qCA5X5AU4HrkQK_hVw' }}
+        layerTypes={['TrafficLayer']}
         defaultCenter={{
           lat: this.props.lat,
           lng: this.props.lng

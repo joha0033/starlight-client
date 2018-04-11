@@ -91,8 +91,6 @@ class DataDisplay extends Component {
   // TOGGLE SORT ORDER
   sortOrder() {
 
-    console.log('ORDER');
-
     this.setState({descending: !this.state.descending}, () =>{
 
       // CALL SORT TO DISPLAY WITH NEW ORDER WITH CURRENT SORT TYPE
@@ -106,7 +104,6 @@ class DataDisplay extends Component {
   // SORT THE DATA BY TYPE
   sortData(type) {
 
-    console.log('SORT');
     // CREATE A NEW ARRAY FROM STATE
     let array = this.state.masterData
 
@@ -172,21 +169,11 @@ class DataDisplay extends Component {
                     center = {can.location.location}
                   />
                   </div>
+                  <a href= {'https://www.google.com/maps/?q=' + can.location.location.lat + ',' + can.location.location.lon}> directions from Gmaps</a>
                 </Col>
-
-                {console.log(!!can.location.location)}
 
 
               </Row>
-
-
-
-
-
-
-
-
-
 
             </DisplayContent>
 
