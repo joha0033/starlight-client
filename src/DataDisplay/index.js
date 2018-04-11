@@ -158,7 +158,7 @@ class DataDisplay extends Component {
                   <p>Size: {can.size}</p>
                   <p>Created On: {moment(can.createdDate).format("MMM Do YY hh:mm a")}</p>
                   <p>Modified On: {moment(can.modifiedDate).format("MMM Do YY hh:mm a")}</p>
-
+                  <p>Current At: {can.location.name}</p>
                 </Col>
                 <Col xs={6}>
                   <h3>Location</h3>
