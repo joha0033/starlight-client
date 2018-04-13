@@ -28,7 +28,7 @@ export const GetDataHelper = async () => {
 
   export const GetLocationHelper = async () => {
 
-    let BaseURL = 'https://www.googleapis.com/geolocation/v1/geolocate?key=AIzaSyA-V2emVaPiyXdXZfzjaou_kypCIaEcZCk'
+    let BaseURL = 'https://www.googleapis.com/geolocation/v1/geolocate?key=' + process.env.REACT_APP_GEOLOCATION_KEY
 
       let data = {
         "homeMobileCountryCode": "310",
