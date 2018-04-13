@@ -30,7 +30,7 @@ class Sidebar extends React.Component {
         <ControlLabel>Sort List</ControlLabel>
         <Row className='container-fluid'>
 
-          <Col xs={6}>
+          <Col xs={12}>
 
             <DropdownButton
               title="Sort By:"
@@ -44,7 +44,8 @@ class Sidebar extends React.Component {
 
           </Col>
 
-          <Col xs={2}>
+          <Col xs={12}>
+            <Padding></Padding>
             <Button onClick={this.props.sortOrder}>
               <Glyphicon glyph="sort" />
             </Button>
@@ -60,16 +61,19 @@ class Sidebar extends React.Component {
 
     return (
       <SidebarStyle>
+
         <Padding></Padding>
-        <Padding></Padding>
-        {this.sortDropdown()}
         <Padding></Padding>
 
-        <h3>
-          <Button onClick={this.props.fetch}>
-              Reload List
-          </Button>
-        </h3>
+
+        {this.sortDropdown()}
+
+        <Padding></Padding>
+
+
+        <Button onClick={this.props.fetch}>
+            Reload List
+        </Button>
 
       </SidebarStyle>
     )

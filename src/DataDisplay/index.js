@@ -2,9 +2,11 @@ import React, { Component } from 'react'
 import styled from 'styled-components';
 import moment from 'moment'
 
-
 // HELPERS
-import { GetDataHelper, SortHelper, PageHelper, SplitDataHelper } from './Helpers'
+import {
+  GetDataHelper, SortHelper,
+  PageHelper, SplitDataHelper,
+  GetDistanceHelper, GetLocationHelper } from './Helpers'
 
 // COMPONENTS
 import Sidebar from './Sidebar'
@@ -14,6 +16,12 @@ import SimpleMap from './Map'
 // STYLES
 import { Row , Col } from 'react-bootstrap';
 import { Pagination } from 'react-bootstrap'
+
+if ("geolocation" in navigator) {
+  console.log('geoLocal available');
+} else {
+  console.log('geoLocal is not available');
+}
 
 const DisplayCard = styled.div`
   text-align: left;
@@ -42,10 +50,7 @@ class DataDisplay extends Component {
     super(props)
 
     this.state = {
-      center: {
-        lat: 59.95,
-        lng: 30.33
-      },
+      location: {},
       masterData: [],
       sortedData:[],
       descending: false,
@@ -58,13 +63,34 @@ class DataDisplay extends Component {
     this.fetchData = this.fetchData.bind(this)
     this.sortOrder = this.sortOrder.bind(this)
     this.sortData = this.sortData.bind(this)
+    this.location = this.location.bind(this)
+
 
   }
 
-  // CALL FETCH WHEN COMPONENT MOUNTS
   componentDidMount() {
-    return this.fetchData()
+    this.fetchData()
   }
+  // CALL FETCH WHEN COMPONENT MOUNTS
+
+
+  location() {
+
+    GetLocationHelper().then((results) => {this.setState({
+      location: {
+        lat: results.location.lat,
+        lng: results.location.lng
+      }
+    }, () => {
+      this.dataMap()
+      console.log("getCurrentPosition Success " + results.location.lat + results.location.lng) // logs position correctly
+    })
+      return console.log(this.state.location);
+
+    })
+
+  }
+
 
   // FETCH CAN JSON DATA AND SET STATE
   fetchData() {
@@ -76,7 +102,7 @@ class DataDisplay extends Component {
       return this.setState({masterData: results}, () => {
 
         // sanity check for data set
-        // return console.log('data set?', !!this.state.masterData[0] !== undefined, 'length:',this.state.masterData.length)
+        return console.log('data set?', !!this.state.masterData[0] !== undefined, 'length:',this.state.masterData.length)
 
       })
 
@@ -130,13 +156,35 @@ class DataDisplay extends Component {
   //////////////////////////////////////////////////
   // MAPS DATA TO CREATE PAGINATION WITH SORTED DATA
   dataMap() {
-
+    console.log('dataMap hit!', this.state.location);
     let currentData = SplitDataHelper(this.state)
-
+    let distance, duration;
     ////////////////////////////////////
     // CREATES "PER PAGE" LIST TO RENDER
+    // let dataToRender = currentData.map((can, index)=>{
+
     let dataToRender = currentData.map((can, index)=>{
 
+      let oLat = this.state.location.lat
+      let oLng = this.state.location.lng
+      let dLat = can.location.location.lat
+      let dLng = can.location.location.lon
+
+      console.log(oLat, oLng);
+
+      if(!!oLat || !!oLng){
+        console.log('get distance?');
+        GetDistanceHelper(oLat, oLng, dLat, dLng).then((results) =>{
+          distance = results.distance
+          duration = results.duration
+          console.log(distance, duration);
+
+        }).then(() => {
+          // variable full
+
+        })
+      }
+      console.log(distance, duration);
       return(
 
         <div key={index}>
@@ -159,6 +207,9 @@ class DataDisplay extends Component {
                   <p>Created On: {moment(can.createdDate).format("MMM Do YY hh:mm a")}</p>
                   <p>Modified On: {moment(can.modifiedDate).format("MMM Do YY hh:mm a")}</p>
                   <p>Current At: {can.location.name}</p>
+                  {console.log(distance, duration)}
+                  {/* {this.state.location.lat || this.state.}
+                  <p>distance/duration: {distance} / {duration}</p> */}
                 </Col>
                 <Col xs={6}>
                   <h3>Location</h3>
@@ -235,14 +286,19 @@ class DataDisplay extends Component {
 
 
   render() {
-
+    const location = this.state.location
 
 
     return (
 
       <div >
         <h1>Can data</h1>
-
+        <a onClick={this.location}> Set your current location </a>
+        <div>
+          {location.lat}
+          <br/>
+          {location.lng}
+        </div>
         <Row className="container">
 
           <Col xs={3}>

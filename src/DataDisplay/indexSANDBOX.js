@@ -85,7 +85,7 @@ class DataDisplay extends Component {
       this.addData()
       console.log("getCurrentPosition Success " + results.location.lat + results.location.lng) // logs position correctly
     })
-      return console.log(this.state.location);
+      return this.state.location
 
     })
 
@@ -113,7 +113,6 @@ class DataDisplay extends Component {
 
   async addData() {
     let data = this.state.masterData
-    console.log(this.state.location);
     if(this.state.location.lat === undefined || this.state.location.lng === undefined ){
       return null
     }else{
@@ -129,13 +128,10 @@ class DataDisplay extends Component {
             distance: results.distance,
             duration: results.duration
           }
-          console.log(travel);
           return travel
 
         }).then((t)=>{
-          console.log(can.name);
           can['travel'] = t
-          console.log(can.travel);
         }).then(()=>{
           this.setState({masterData: data}, ()=>{
 
@@ -196,7 +192,7 @@ class DataDisplay extends Component {
   //////////////////////////////////////////////////
   // MAPS DATA TO CREATE PAGINATION WITH SORTED DATA
   dataMap() {
-    console.log('dataMap hit!', this.state.location);
+
     let currentData = SplitDataHelper(this.state)
 
     ////////////////////////////////////
@@ -327,12 +323,9 @@ class DataDisplay extends Component {
 
       <div >
         <h1>Can data</h1>
+        
         <a onClick={this.location}> Set your current location </a>
-        <div>
-          {location.lat}
-          <br/>
-          {location.lng}
-        </div>
+
         <Row className="container">
 
           <Col xs={3}>

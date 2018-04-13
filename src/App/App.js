@@ -3,7 +3,8 @@ import { BrowserRouter as Router, Route, Link }  from 'react-router-dom'
 
 import './App.css';
 
-import DataDisplay from '../DataDisplay'
+// import DataDisplay from '../DataDisplay'
+import DataDisplay from '../DataDisplay/indexSANDBOX'
 
 class App extends Component {
   render() {
@@ -20,7 +21,7 @@ class App extends Component {
 
 
           <div className="homeBody">
-            
+
             <p className="App-intro">
               To get your data, go here <code><Link to="/cans">/cans</Link></code> and enjoy!
             </p>
