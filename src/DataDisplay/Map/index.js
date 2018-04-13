@@ -24,7 +24,6 @@ class SimpleMap extends React.Component {
 
        <GoogleMapReact
         google={this.props.google}
-        // bootstrapURLKeys={{ key: 'AIzaSyChyTQR99XFwMy--qCA5X5AU4HrkQK_hVw' }}
         bootstrapURLKeys={{ key: process.env.REACT_APP_GOOGLE_MAPS_KEY }}
         layerTypes={['TrafficLayer']}
         defaultCenter={{

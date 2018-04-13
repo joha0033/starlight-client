@@ -83,7 +83,6 @@ class DataDisplay extends Component {
       }
     }, () => {
       this.addData()
-      console.log("getCurrentPosition Success " + results.location.lat + results.location.lng) // logs position correctly
     })
       return this.state.location
 
@@ -96,7 +95,7 @@ class DataDisplay extends Component {
   fetchData() {
 
     // CALL TO HELPER FUNCTION FOR FETCH
-    GetDataHelper().then((results) => {
+  GetDataHelper().then((results) => {
       results
       // SET STATE PLUS CALLBACK FOR IMMMEADIATE SET AND CHECK
       return this.setState({masterData: results}, () => {
@@ -237,9 +236,6 @@ class DataDisplay extends Component {
 
 
 
-                  {/* <p>travel duration: {can.travel.distance} </p> */}
-                  {console.log(can.travel)}
-
                 </Col>
                 <Col xs={6}>
                   <h3>Location</h3>
@@ -323,7 +319,7 @@ class DataDisplay extends Component {
 
       <div >
         <h1>Can data</h1>
-        
+
         <a onClick={this.location}> Set your current location </a>
 
         <Row className="container">
