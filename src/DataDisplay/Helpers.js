@@ -26,6 +26,63 @@ export const GetDataHelper = async () => {
 
   }
 
+  export const GetLocationHelper = async () => {
+
+    let BaseURL = 'https://www.googleapis.com/geolocation/v1/geolocate?key=' + process.env.REACT_APP_GEOLOCATION_KEY
+
+      let data = {
+        "homeMobileCountryCode": "310",
+        "homeMobileNetworkCode": "050",
+        "considerIp": "true"
+        }
+
+      let response = await fetch(BaseURL, {
+        body: data,
+          headers: {
+            'contentType': 'application/json'
+          },
+          method: 'POST',
+          mode: 'cors'
+        })
+
+        // IF THERE IS A SUCCESSFUL RESPONSE
+        if(response.status === 200){
+          return response.json()
+        }
+
+        //if respones is shit, throw error
+        throw new Error(response.status);
+
+    }
+
+  export const GetDistanceHelper = async (oLat, oLng, dLat, dLng) => {
+    if(!oLat || !oLng){
+      return null
+    }
+    let BaseURL = `http://localhost:5000/data/distance/origin/${oLat}/${oLng}/destination/${dLat}/${dLng}`
+    console.log(BaseURL);
+
+
+      // SET UP GET FETCH
+      let response = await fetch(BaseURL, {
+          headers: {
+            Accept: 'application/json'
+          },
+          method: 'GET',
+          mode: 'cors'
+        })
+
+        // IF THERE IS A SUCCESSFUL RESPONSE
+        if(response.status === 200){
+          return response.json()
+        }
+
+        //if respones is shit, throw error
+        throw new Error(response.status);
+
+    }
+
+
 
 
 

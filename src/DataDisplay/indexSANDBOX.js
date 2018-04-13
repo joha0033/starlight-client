@@ -64,7 +64,7 @@ class DataDisplay extends Component {
     this.sortOrder = this.sortOrder.bind(this)
     this.sortData = this.sortData.bind(this)
     this.location = this.location.bind(this)
-
+    this.addData = this.addData.bind(this)
 
   }
 
@@ -82,10 +82,9 @@ class DataDisplay extends Component {
         lng: results.location.lng
       }
     }, () => {
-      this.dataMap()
-      console.log("getCurrentPosition Success " + results.location.lat + results.location.lng) // logs position correctly
+      this.addData()
     })
-      return console.log(this.state.location);
+      return this.state.location
 
     })
 
@@ -96,20 +95,56 @@ class DataDisplay extends Component {
   fetchData() {
 
     // CALL TO HELPER FUNCTION FOR FETCH
-    GetDataHelper().then((results) => {
-
+  GetDataHelper().then((results) => {
+      results
       // SET STATE PLUS CALLBACK FOR IMMMEADIATE SET AND CHECK
       return this.setState({masterData: results}, () => {
 
+        return this.addData()
         // sanity check for data set
-        return console.log('data set?', !!this.state.masterData[0] !== undefined, 'length:',this.state.masterData.length)
+        // return console.log('data set?', !!this.state.masterData[0] !== undefined, 'length:',this.state.masterData.length)
 
       })
 
     })
 
+  }
 
-}
+  async addData() {
+    let data = this.state.masterData
+    if(this.state.location.lat === undefined || this.state.location.lng === undefined ){
+      return null
+    }else{
+      return await data.map((can)=>{
+        let oLat = this.state.location.lat
+        let oLng = this.state.location.lng
+        let dLat = can.location.location.lat
+        let dLng = can.location.location.lon
+
+        GetDistanceHelper(oLat, oLng, dLat, dLng).then((results) =>{
+
+          let travel = {
+            distance: results.distance,
+            duration: results.duration
+          }
+          return travel
+
+        }).then((t)=>{
+          can['travel'] = t
+        }).then(()=>{
+          this.setState({masterData: data}, ()=>{
+
+            return this.dataMap()
+          })
+        })
+
+      })
+
+
+    }
+
+
+  }
 
 
 
@@ -156,35 +191,15 @@ class DataDisplay extends Component {
   //////////////////////////////////////////////////
   // MAPS DATA TO CREATE PAGINATION WITH SORTED DATA
   dataMap() {
-    console.log('dataMap hit!', this.state.location);
+
     let currentData = SplitDataHelper(this.state)
-    let distance, duration;
+
     ////////////////////////////////////
     // CREATES "PER PAGE" LIST TO RENDER
     // let dataToRender = currentData.map((can, index)=>{
 
     let dataToRender = currentData.map((can, index)=>{
 
-      let oLat = this.state.location.lat
-      let oLng = this.state.location.lng
-      let dLat = can.location.location.lat
-      let dLng = can.location.location.lon
-
-      console.log(oLat, oLng);
-
-      if(!!oLat || !!oLng){
-        console.log('get distance?');
-        GetDistanceHelper(oLat, oLng, dLat, dLng).then((results) =>{
-          distance = results.distance
-          duration = results.duration
-          console.log(distance, duration);
-
-        }).then(() => {
-          // variable full
-
-        })
-      }
-      console.log(distance, duration);
       return(
 
         <div key={index}>
@@ -207,9 +222,20 @@ class DataDisplay extends Component {
                   <p>Created On: {moment(can.createdDate).format("MMM Do YY hh:mm a")}</p>
                   <p>Modified On: {moment(can.modifiedDate).format("MMM Do YY hh:mm a")}</p>
                   <p>Current At: {can.location.name}</p>
-                  {console.log(distance, duration)}
-                  {/* {this.state.location.lat || this.state.}
-                  <p>distance/duration: {distance} / {duration}</p> */}
+
+
+                  <p>travel duration: {
+                    !can.travel
+                    ? 'please set location'
+                    : can.travel.duration} </p>
+
+                  <p>travel duration: {
+                    !can.travel
+                    ? 'please set location'
+                    : can.travel.distance} </p>
+
+
+
                 </Col>
                 <Col xs={6}>
                   <h3>Location</h3>
@@ -293,12 +319,9 @@ class DataDisplay extends Component {
 
       <div >
         <h1>Can data</h1>
+
         <a onClick={this.location}> Set your current location </a>
-        <div>
-          {location.lat}
-          <br/>
-          {location.lng}
-        </div>
+
         <Row className="container">
 
           <Col xs={3}>
@@ -323,8 +346,6 @@ class DataDisplay extends Component {
       </div>
 
     )
-
-
   }
 }
 
