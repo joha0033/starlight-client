@@ -76,11 +76,14 @@ class DataDisplay extends Component {
 
   location() {
 
-    GetLocationHelper().then((results) => {this.setState({
-      location: {
-        lat: results.location.lat,
-        lng: results.location.lng
-      }
+    GetLocationHelper().then((results) => {
+      console.log('results--------------',results);
+      
+      this.setState({
+        location: {
+          lat: results.location.lat,
+          lng: results.location.lng
+        }
     }, () => {
       this.dataMap()
       console.log("getCurrentPosition Success " + results.location.lat + results.location.lng) // logs position correctly

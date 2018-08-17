@@ -72,11 +72,10 @@ class DataDisplay extends Component {
     this.fetchData()
   }
   // CALL FETCH WHEN COMPONENT MOUNTS
-
-
   location() {
 
-    GetLocationHelper().then((results) => {this.setState({
+    GetLocationHelper().then((results) => {
+      this.setState({
       location: {
         lat: results.location.lat,
         lng: results.location.lng
@@ -96,7 +95,6 @@ class DataDisplay extends Component {
 
     // CALL TO HELPER FUNCTION FOR FETCH
   GetDataHelper().then((results) => {
-      results
       // SET STATE PLUS CALLBACK FOR IMMMEADIATE SET AND CHECK
       return this.setState({masterData: results}, () => {
 
@@ -121,7 +119,7 @@ class DataDisplay extends Component {
         let dLat = can.location.location.lat
         let dLng = can.location.location.lon
 
-        GetDistanceHelper(oLat, oLng, dLat, dLng).then((results) =>{
+        return GetDistanceHelper(oLat, oLng, dLat, dLng).then((results) => {
 
           let travel = {
             distance: results.distance,
@@ -312,7 +310,7 @@ class DataDisplay extends Component {
 
 
   render() {
-    const location = this.state.location
+    // const location = this.state.location
 
 
     return (
