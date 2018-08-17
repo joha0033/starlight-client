@@ -12,3 +12,4 @@ set your google maps/geolocation API key to...
 ```REACT_APP_GOOGLE_MAPS_KEY=[YOUR KEY]``` > [help](http://lmgtfy.com/?q=getting+a+maps+API+key+google)
 
 ```REACT_APP_GEOLOCATION_KEY=[YOUR KEY]``` > [help](http://lmgtfy.com/?q=getting+a+geolocation+API+key+google)
+
